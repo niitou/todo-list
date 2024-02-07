@@ -1,14 +1,9 @@
 import React, { useState } from 'react';
 
-enum Status {
-	Complete,
-	Incomplete
-}
-
 interface Task {
 	id: number,
 	name: string,
-	status: Status,
+	status: boolean,
 	created_at: Date
 }
 let id = 0;
@@ -22,7 +17,7 @@ function App() {
 		const newTask: Task = {
 			id: id,
 			name: task,
-			status: Status.Incomplete,
+			status: false,
 			created_at: new Date()
 		}
 		id++
@@ -35,7 +30,9 @@ function App() {
 	}
 
 	const updateTask = (id: number) => {
-		console.log(`Update taks no ${id + 1}`)
+		tasks[id].status = true
+		setTasks([...tasks])
+		console.log(`Taks no ${id + 1} done`)
 	}
 	return (
 		<div className="App">
@@ -50,11 +47,11 @@ function App() {
 			<div className="task-area">
 				{
 					tasks.map((value, index) => (
-						<div className="taskcard" key={index}>
-							<input type="checkbox" checked={Status.Complete ? true : false} />
-							<p>{value.name}</p>
-							<button onClick={() => updateTask(value.id)}>Update</button>
-							<button onClick={() => deleteTask(value.id)}>Delete</button>
+						<div className="taskcard" key={index} style={{display:"flex", flexDirection:"row", margin:".5em 0"}}>
+							<p>{value.status ? (<s>{value.name}</s>) : value.name }</p>
+							<button onClick={() => updateTask(value.id)} style={{margin:"0 1em"}}>Done</button>
+							<button onClick={() => deleteTask(value.id)} style={{margin:"0 1em"}}>Delete</button>
+							<p>Created at : {value.created_at.toISOString()}</p>
 						</div>
 					))
 				}
